@@ -1,3 +1,13 @@
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+// SPDX-License-Identifier: MIT
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+//
+// markings:managed
+
 package engine
 
 import (
@@ -181,3 +191,9 @@ func removeOldMarkings(content string, style config.CommentStyle) string {
 
 	return strings.Join(result, "\n")
 }
+
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed

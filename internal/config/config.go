@@ -1,3 +1,13 @@
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+// SPDX-License-Identifier: MIT
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+//
+// markings:managed
+
 package config
 
 import (
@@ -52,3 +62,9 @@ func Load(path string) (*Config, error) {
 
 	return &cfg, nil
 }
+
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed

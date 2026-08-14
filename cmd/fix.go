@@ -1,3 +1,13 @@
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+// SPDX-License-Identifier: MIT
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+//
+// markings:managed
+
 package cmd
 
 import (
@@ -39,3 +49,9 @@ var fixCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(fixCmd)
 }
+
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed

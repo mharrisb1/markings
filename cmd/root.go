@@ -1,3 +1,13 @@
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+// SPDX-License-Identifier: MIT
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+//
+// markings:managed
+
 package cmd
 
 import (
@@ -23,3 +33,9 @@ func Execute() {
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", ".markings.yaml", "config file")
 }
+
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed
