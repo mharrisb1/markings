@@ -30,12 +30,18 @@ func Format(text string, style config.CommentStyle) string {
 		b.WriteString(Marker)
 		b.WriteString("\n")
 
+		b.WriteString(strings.TrimRight(style.Block.Middle, " \t"))
+		b.WriteString("\n")
+
 		// Content
 		for _, line := range lines {
 			b.WriteString(style.Block.Middle)
 			b.WriteString(line)
 			b.WriteString("\n")
 		}
+
+		b.WriteString(strings.TrimRight(style.Block.Middle, " \t"))
+		b.WriteString("\n")
 
 		// End marker
 		b.WriteString(style.Block.Middle)
@@ -53,12 +59,18 @@ func Format(text string, style config.CommentStyle) string {
 	b.WriteString(Marker)
 	b.WriteString("\n")
 
+	b.WriteString(strings.TrimRight(style.Prefix, " \t"))
+	b.WriteString("\n")
+
 	// Content
 	for _, line := range lines {
 		b.WriteString(style.Prefix)
 		b.WriteString(line)
 		b.WriteString("\n")
 	}
+
+	b.WriteString(strings.TrimRight(style.Prefix, " \t"))
+	b.WriteString("\n")
 
 	// End marker
 	b.WriteString(style.Prefix)
