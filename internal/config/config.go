@@ -15,11 +15,10 @@ type Config struct {
 }
 
 type CommentStyle struct {
-	// For line comments (e.g., "// ")
-	Prefix string `yaml:"prefix"`
-
-	// For block comments
-	Block *BlockStyle `yaml:"block"`
+	Prefix        string      `yaml:"prefix"`
+	Block         *BlockStyle `yaml:"block"`
+	NewlineBefore bool        `yaml:"newline_before"`
+	NewlineAfter  bool        `yaml:"newline_after"`
 }
 
 type BlockStyle struct {

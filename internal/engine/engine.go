@@ -88,6 +88,9 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	if rule.HeaderTemplate != "" {
 		if raw, ok := e.headers[rule.HeaderTemplate]; ok {
 			expectedHeader = comments.Format(raw, style)
+			if style.NewlineAfter {
+				expectedHeader += "\n"
+			}
 		}
 	}
 
@@ -95,6 +98,9 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	if rule.FooterTemplate != "" {
 		if raw, ok := e.footers[rule.FooterTemplate]; ok {
 			expectedFooter = comments.Format(raw, style)
+			if style.NewlineBefore {
+				expectedFooter = "\n" + expectedFooter
+			}
 		}
 	}
 
