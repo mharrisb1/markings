@@ -1,0 +1,29 @@
+templates:
+  mit_header: |
+    Copyright (c) {{ .Year }} {{ .Author }}
+    SPDX-License-Identifier: MIT
+
+    This software is released under the MIT License.
+    https://opensource.org/licenses/MIT
+
+  mit_footer: |
+    Copyright (c) {{ .Year }} {{ .Author }}
+
+data:
+  Year: 2026
+  Author: Michael Harris
+
+comment_styles:
+  go_line:
+    prefix: "// "
+
+rules:
+  - id: go-files
+    match: "**/*.go"
+    header:
+      template: mit_header
+      newline_after: true
+    footer:
+      template: mit_footer
+      newline_before: true
+    comment_style: go_line
