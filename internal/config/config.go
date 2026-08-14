@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Templates     map[string]string       `yaml:"templates"`
 	Data          map[string]any          `yaml:"data"`
-	CommentStyles map[string]CommentStyle `yaml:"comments"`
+	CommentStyles map[string]CommentStyle `yaml:"comment_styles"`
 	Rules         []Rule                  `yaml:"rules"`
 }
 
