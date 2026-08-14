@@ -1,3 +1,13 @@
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+// SPDX-License-Identifier: MIT
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+//
+// markings:managed
+
 package comments
 
 import (
@@ -5,7 +15,7 @@ import (
 	"strings"
 )
 
-const Marker = "markings:managed"
+const Marker = "markings:" + "managed"
 
 // Format applies the given comment style to the raw text and adds demarcation markers.
 func Format(text string, style config.CommentStyle) string {
@@ -35,8 +45,12 @@ func Format(text string, style config.CommentStyle) string {
 
 		// Content
 		for _, line := range lines {
-			b.WriteString(style.Block.Middle)
-			b.WriteString(line)
+			if strings.TrimSpace(line) == "" {
+				b.WriteString(strings.TrimRight(style.Block.Middle, " \t"))
+			} else {
+				b.WriteString(style.Block.Middle)
+				b.WriteString(line)
+			}
 			b.WriteString("\n")
 		}
 
@@ -64,8 +78,12 @@ func Format(text string, style config.CommentStyle) string {
 
 	// Content
 	for _, line := range lines {
-		b.WriteString(style.Prefix)
-		b.WriteString(line)
+		if strings.TrimSpace(line) == "" {
+			b.WriteString(strings.TrimRight(style.Prefix, " \t"))
+		} else {
+			b.WriteString(style.Prefix)
+			b.WriteString(line)
+		}
 		b.WriteString("\n")
 	}
 
@@ -79,3 +97,9 @@ func Format(text string, style config.CommentStyle) string {
 
 	return b.String()
 }
+
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed
