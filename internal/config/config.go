@@ -15,24 +15,28 @@ type Config struct {
 }
 
 type CommentStyle struct {
-	Prefix        string      `yaml:"prefix"`
-	Block         *BlockStyle `yaml:"block"`
-	NewlineBefore bool        `yaml:"newline_before"`
-	NewlineAfter  bool        `yaml:"newline_after"`
+	Prefix string      `yaml:"prefix"`
+	Block  *BlockStyle `yaml:"block"`
 }
 
 type BlockStyle struct {
-	Start  string `yaml:"start"`  // e.g., "/*\n"
-	Middle string `yaml:"middle"` // e.g., " * "
-	End    string `yaml:"end"`    // e.g., "\n */"
+	Start  string `yaml:"start"`
+	Middle string `yaml:"middle"`
+	End    string `yaml:"end"`
+}
+
+type MarkingConfig struct {
+	Template      string `yaml:"template"`
+	NewlineBefore bool   `yaml:"newline_before"`
+	NewlineAfter  bool   `yaml:"newline_after"`
 }
 
 type Rule struct {
-	ID             string `yaml:"id"`
-	Match          string `yaml:"match"`
-	HeaderTemplate string `yaml:"header_template"`
-	FooterTemplate string `yaml:"footer_template"`
-	CommentStyle   string `yaml:"comment_style"`
+	ID           string         `yaml:"id"`
+	Match        string         `yaml:"match"`
+	Header       *MarkingConfig `yaml:"header"`
+	Footer       *MarkingConfig `yaml:"footer"`
+	CommentStyle string         `yaml:"comment_style"`
 }
 
 func Load(path string) (*Config, error) {

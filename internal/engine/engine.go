@@ -85,21 +85,27 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	}
 
 	expectedHeader := ""
-	if rule.HeaderTemplate != "" {
-		if raw, ok := e.headers[rule.HeaderTemplate]; ok {
+	if rule.Header != nil && rule.Header.Template != "" {
+		if raw, ok := e.headers[rule.Header.Template]; ok {
 			expectedHeader = comments.Format(raw, style)
-			if style.NewlineAfter {
+			if rule.Header.NewlineBefore {
+				expectedHeader = "\n" + expectedHeader
+			}
+			if rule.Header.NewlineAfter {
 				expectedHeader += "\n"
 			}
 		}
 	}
 
 	expectedFooter := ""
-	if rule.FooterTemplate != "" {
-		if raw, ok := e.footers[rule.FooterTemplate]; ok {
+	if rule.Footer != nil && rule.Footer.Template != "" {
+		if raw, ok := e.footers[rule.Footer.Template]; ok {
 			expectedFooter = comments.Format(raw, style)
-			if style.NewlineBefore {
+			if rule.Footer.NewlineBefore {
 				expectedFooter = "\n" + expectedFooter
+			}
+			if rule.Footer.NewlineAfter {
+				expectedFooter += "\n"
 			}
 		}
 	}
