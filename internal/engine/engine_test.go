@@ -1,6 +1,17 @@
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+// SPDX-License-Identifier: MIT
+//
+// This software is released under the MIT License.
+// https://opensource.org/licenses/MIT
+//
+// markings:managed
+
 package engine
 
 import (
+	"markings/internal/comments"
 	"markings/internal/config"
 	"testing"
 )
@@ -28,9 +39,9 @@ func TestRemoveOldMarkings(t *testing.T) {
 			name:  "Bug: Managed block followed by normal block",
 			style: blockStyle,
 			content: `/*
- * markings:managed
+ * ` + comments.Marker + `
  * some content
- * markings:managed
+ * ` + comments.Marker + `
  */
 /*
  * Normal comment that should NOT be touched
@@ -62,9 +73,9 @@ func TestRemoveOldMarkings(t *testing.T) {
  * Normal comment
  */
 /*
- * markings:managed
+ * ` + comments.Marker + `
  * managed content
- * markings:managed
+ * ` + comments.Marker + `
  */
 var x = 1;`,
 			expected: `/*
@@ -75,9 +86,9 @@ var x = 1;`,
 		{
 			name:  "Line style comments",
 			style: lineStyle,
-			content: `// markings:managed
+			content: `// ` + comments.Marker + `
 // managed content
-// markings:managed
+// ` + comments.Marker + `
 // Normal comment
 var y = 2;`,
 			expected: `// Normal comment
@@ -94,3 +105,8 @@ var y = 2;`,
 		})
 	}
 }
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed
