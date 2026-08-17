@@ -22,6 +22,7 @@ type Config struct {
 	Data          map[string]any          `yaml:"data"`
 	CommentStyles map[string]CommentStyle `yaml:"comment_styles"`
 	Rules         []Rule                  `yaml:"rules"`
+	Marker        string                  `yaml:"marker"`
 }
 
 type CommentStyle struct {
@@ -61,6 +62,15 @@ func Load(path string) (*Config, error) {
 	}
 
 	return &cfg, nil
+}
+
+const DefaultMarker = "markings:" + "managed"
+
+func (c *Config) GetMarker() string {
+	if c.Marker == "" {
+		return DefaultMarker
+	}
+	return c.Marker
 }
 
 // markings:managed

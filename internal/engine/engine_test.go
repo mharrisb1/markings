@@ -11,7 +11,6 @@
 package engine
 
 import (
-	"markings/internal/comments"
 	"markings/internal/config"
 	"testing"
 )
@@ -39,9 +38,9 @@ func TestRemoveOldMarkings(t *testing.T) {
 			name:  "Bug: Managed block followed by normal block",
 			style: blockStyle,
 			content: `/*
- * ` + comments.Marker + `
+ * ` + config.DefaultMarker + `
  * some content
- * ` + comments.Marker + `
+ * ` + config.DefaultMarker + `
  */
 /*
  * Normal comment that should NOT be touched
@@ -73,9 +72,9 @@ func TestRemoveOldMarkings(t *testing.T) {
  * Normal comment
  */
 /*
- * ` + comments.Marker + `
+ * ` + config.DefaultMarker + `
  * managed content
- * ` + comments.Marker + `
+ * ` + config.DefaultMarker + `
  */
 var x = 1;`,
 			expected: `/*
@@ -86,9 +85,9 @@ var x = 1;`,
 		{
 			name:  "Line style comments",
 			style: lineStyle,
-			content: `// ` + comments.Marker + `
+			content: `// ` + config.DefaultMarker + `
 // managed content
-// ` + comments.Marker + `
+// ` + config.DefaultMarker + `
 // Normal comment
 var y = 2;`,
 			expected: `// Normal comment
@@ -98,13 +97,14 @@ var y = 2;`,
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := removeOldMarkings(tt.content, tt.style)
+			result := removeOldMarkings(tt.content, tt.style, config.DefaultMarker)
 			if result != tt.expected {
 				t.Errorf("Expected:\n%s\n\nGot:\n%s", tt.expected, result)
 			}
 		})
 	}
 }
+
 // markings:managed
 //
 // Copyright (c) 2026 Michael Harris

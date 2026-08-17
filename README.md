@@ -35,7 +35,12 @@ go install .
 
 Create a `.markings.yaml` file in your repository root to define templates and map them to file types:
 
+> [!WARNING]
+> You must use [`migrate-marker`](https://github.com/mharrisb1/markings#usage) if you set a new value for `marker` in config for an existing project.
+
 ```yaml
+marker: "my-custom-marker:managed" # Optional: defaults to "markings:managed"
+
 templates:
   mit_header: |
     Copyright (c) {{ .Year }} {{ .Author }}
@@ -68,13 +73,16 @@ markings check main.go utils/*.go
 
 # Automatically inject or update markings in files
 markings fix main.go utils/*.go
+
+# Migrate files from an old marker to the new one defined in your config
+markings migrate-marker "markings:managed" main.go utils/*.go
 ```
 
 ## Pre-Commit
 
-To automatically enforce or update markings during commits, add the following to your `.pre-commit-config.yaml`. 
+To automatically enforce or update markings during commits, add the following to your `.pre-commit-config.yaml`.
 
-*(Note: This currently requires Go to be installed on the user's system).*
+_(Note: This currently requires Go to be installed on the user's system)._
 
 ```yaml
 repos:
@@ -84,7 +92,7 @@ repos:
       # Automatically fix markings
       - id: markings
         types: [text]
-      
+
       # Or just check without modifying
       # - id: markings-check
       #   types: [text]

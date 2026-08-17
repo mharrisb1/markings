@@ -97,7 +97,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	expectedHeader := ""
 	if rule.Header != nil && rule.Header.Template != "" {
 		if raw, ok := e.headers[rule.Header.Template]; ok {
-			expectedHeader = comments.Format(raw, style)
+			expectedHeader = comments.Format(raw, style, e.config.GetMarker())
 			if rule.Header.NewlineBefore {
 				expectedHeader = "\n" + expectedHeader
 			}
@@ -110,7 +110,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	expectedFooter := ""
 	if rule.Footer != nil && rule.Footer.Template != "" {
 		if raw, ok := e.footers[rule.Footer.Template]; ok {
-			expectedFooter = comments.Format(raw, style)
+			expectedFooter = comments.Format(raw, style, e.config.GetMarker())
 			if rule.Footer.NewlineBefore {
 				expectedFooter = "\n" + expectedFooter
 			}
@@ -134,7 +134,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	}
 
 	// Fix logic: remove old markers and inject new ones
-	newContent := removeOldMarkings(content, style)
+	newContent := removeOldMarkings(content, style, e.config.GetMarker())
 
 	if expectedHeader != "" {
 		newContent = expectedHeader + strings.TrimLeft(newContent, "\n")
@@ -160,7 +160,7 @@ const (
 )
 
 // State machine for stripping out existing marking blocks
-func removeOldMarkings(content string, style config.CommentStyle) string {
+func removeOldMarkings(content string, style config.CommentStyle, marker string) string {
 	lines := strings.Split(content, "\n")
 	var result []string
 	state := stateNormal
@@ -168,7 +168,7 @@ func removeOldMarkings(content string, style config.CommentStyle) string {
 	for _, line := range lines {
 		switch state {
 		case stateNormal:
-			if strings.Contains(line, comments.Marker) {
+			if strings.Contains(line, marker) {
 				state = stateInsideMarking
 				if style.Block != nil && len(result) > 0 {
 					if strings.HasPrefix(strings.TrimSpace(result[len(result)-1]), strings.TrimSpace(style.Block.Start)) {
@@ -180,7 +180,7 @@ func removeOldMarkings(content string, style config.CommentStyle) string {
 			}
 
 		case stateInsideMarking:
-			if strings.Contains(line, comments.Marker) {
+			if strings.Contains(line, marker) {
 				if style.Block != nil {
 					state = stateExpectingBlockEnd
 				} else {
@@ -201,6 +201,7 @@ func removeOldMarkings(content string, style config.CommentStyle) string {
 
 	return strings.Join(result, "\n")
 }
+
 // markings:managed
 //
 // Copyright (c) 2026 Michael Harris

@@ -15,10 +15,8 @@ import (
 	"strings"
 )
 
-const Marker = "markings:" + "managed"
-
 // Format applies the given comment style to the raw text and adds demarcation markers.
-func Format(text string, style config.CommentStyle) string {
+func Format(text string, style config.CommentStyle, marker string) string {
 	if text == "" {
 		return ""
 	}
@@ -37,7 +35,7 @@ func Format(text string, style config.CommentStyle) string {
 
 		// Start marker
 		b.WriteString(style.Block.Middle)
-		b.WriteString(Marker)
+		b.WriteString(marker)
 		b.WriteString("\n")
 
 		b.WriteString(strings.TrimRight(style.Block.Middle, " \t"))
@@ -59,7 +57,7 @@ func Format(text string, style config.CommentStyle) string {
 
 		// End marker
 		b.WriteString(style.Block.Middle)
-		b.WriteString(Marker)
+		b.WriteString(marker)
 		b.WriteString("\n")
 
 		b.WriteString(style.Block.End)
@@ -70,7 +68,7 @@ func Format(text string, style config.CommentStyle) string {
 
 	// Start marker
 	b.WriteString(style.Prefix)
-	b.WriteString(Marker)
+	b.WriteString(marker)
 	b.WriteString("\n")
 
 	b.WriteString(strings.TrimRight(style.Prefix, " \t"))
@@ -92,7 +90,7 @@ func Format(text string, style config.CommentStyle) string {
 
 	// End marker
 	b.WriteString(style.Prefix)
-	b.WriteString(Marker)
+	b.WriteString(marker)
 	b.WriteString("\n")
 
 	return b.String()
