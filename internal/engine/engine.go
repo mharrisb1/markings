@@ -151,49 +151,53 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	return err == nil, err
 }
 
-// removeOldMarkings strips out existing marking blocks using the markers
+type parseState int
+
+const (
+	stateNormal parseState = iota
+	stateInsideMarking
+	stateExpectingBlockEnd
+)
+
+// State machine for stripping out existing marking blocks
 func removeOldMarkings(content string, style config.CommentStyle) string {
 	lines := strings.Split(content, "\n")
 	var result []string
-	inMarking := false
+	state := stateNormal
 
 	for _, line := range lines {
-		if strings.Contains(line, comments.Marker) {
-			if !inMarking {
-				inMarking = true
+		switch state {
+		case stateNormal:
+			if strings.Contains(line, comments.Marker) {
+				state = stateInsideMarking
 				if style.Block != nil && len(result) > 0 {
-					// Remove the preceding block start (e.g. `/*`)
 					if strings.HasPrefix(strings.TrimSpace(result[len(result)-1]), strings.TrimSpace(style.Block.Start)) {
 						result = result[:len(result)-1]
 					}
 				}
-				continue
 			} else {
-				inMarking = false
-				continue
+				result = append(result, line)
+			}
+
+		case stateInsideMarking:
+			if strings.Contains(line, comments.Marker) {
+				if style.Block != nil {
+					state = stateExpectingBlockEnd
+				} else {
+					state = stateNormal
+				}
+			}
+
+		case stateExpectingBlockEnd:
+			state = stateNormal
+
+			if strings.HasPrefix(strings.TrimSpace(line), strings.TrimSpace(style.Block.End)) {
+				// Drop line
+			} else {
+				result = append(result, line)
 			}
 		}
-
-		if inMarking {
-			continue
-		}
-
-		// Remove the trailing block end (e.g. `*/`) immediately following a marking block
-		if !inMarking && style.Block != nil && strings.HasPrefix(strings.TrimSpace(line), strings.TrimSpace(style.Block.End)) {
-			// Only skip if the previous line was the end of a marking block (we just flipped inMarking to false on the prev loop)
-			// A simpler heuristic: if we aren't in a marking, and this is an end block, and we haven't added anything since the marking ended...
-			// For brevity, we just drop it if it's right here.
-			continue
-		}
-
-		result = append(result, line)
 	}
 
 	return strings.Join(result, "\n")
 }
-
-// markings:managed
-//
-// Copyright (c) 2026 Michael Harris
-//
-// markings:managed

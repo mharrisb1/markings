@@ -1,52 +1,29 @@
 # Markings
 
-Automatically enforce source code banner markings.
+Automatically enforce and update source code banner markings.
 
 ## What are banner markings?
 
-Banner markings are text lines that need to appear at either the top or bottom (or oftentimes both) of text documents.
+Banner markings are standardized text blocks injected at the top or bottom of source code files. They are commonly used for compliance, such as applying [classification levels](https://www.dodcui.mil/Training/Banner-Line) in defense contexts or managing open-source licensing headers.
 
-This is common in defense contexts where a document must be marked at the top and the bottom indicating the level of classification[^1].
-
-[^1]: https://www.dodcui.mil/Training/Banner-Line
-
-Code is treated like any other form of text document so for compliant programs you will need to add banner markings to source code files:
-
-```python
-#                 CUI
-#
-#         UNCLASSIFIED//FOUO
-
-import sys
-
-def process_data(data):
-    """Process sensitive data."""
-    pass
-
-if __name__ == "__main__":
-    print("Starting process...")
-    process_data([])
-    sys.exit(0)
-
-#                 CUI
-#
-#         UNCLASSIFIED//FOUO
-```
-
-Banner markings are also used outside of the context of defense to mark documents with license info and other metadata that may be needed for compliance.
+`markings` uses special `markings:managed` boundaries to safely identify, apply, and update these banners without breaking your code.
 
 ```go
+// markings:managed
+//
 // Copyright (c) 2026 Markings Contributors
 // SPDX-License-Identifier: MIT
 //
 // This software is released under the MIT License.
+//
+// markings:managed
 
 package main
 ```
 
 ## Installation
 
-This tool is mainly intended to be added to CI pipelines and pre-commit hooks but can also be used as a standalone CLI. Currently, there are no pre-built binaries.
+Currently, `markings` requires a local Go toolchain to install:
 
 ```bash
 git clone https://github.com/mharrisb1/markings.git
@@ -54,38 +31,61 @@ cd markings
 go install .
 ```
 
-Then to see usage docs:
+## Configuration
+
+Create a `.markings.yaml` file in your repository root to define templates and map them to file types:
+
+```yaml
+templates:
+  mit_header: |
+    Copyright (c) {{ .Year }} {{ .Author }}
+    SPDX-License-Identifier: MIT
+
+data:
+  Year: 2026
+  Author: Your Name
+
+comment_styles:
+  go_line:
+    prefix: "// "
+
+rules:
+  - id: go-files
+    match: "**/*.go"
+    header:
+      template: mit_header
+      newline_after: true
+    comment_style: go_line
+```
+
+## Usage
+
+You must explicitly pass the files you want to check or fix. Files that do not match any `rules` in your config are ignored.
 
 ```bash
-markings --help
+# Check if files have correct markings (exits non-zero if missing/incorrect)
+markings check main.go utils/*.go
+
+# Automatically inject or update markings in files
+markings fix main.go utils/*.go
 ```
 
-## Integrating with Pre-Commit
+## Pre-Commit
 
-To automatically add or update markings add the following to you `.pre-commit-config.yaml`:
+To automatically enforce or update markings during commits, add the following to your `.pre-commit-config.yaml`. 
+
+*(Note: This currently requires Go to be installed on the user's system).*
 
 ```yaml
 repos:
   - repo: https://github.com/mharrisb1/markings
-    rev: v0.1.0
+    rev: v0.1.1
     hooks:
+      # Automatically fix markings
       - id: markings
+        types: [text]
+      
+      # Or just check without modifying
+      # - id: markings-check
+      #   types: [text]
 ```
-
-To just check (no fix) you can add:
-
-```yaml
-repos:
-  - repo: https://github.com/mharrisb1/markings
-    rev: v0.1.0
-    hooks:
-      - id: markings-check
-```
-
-## Integrating with Github Workflows
-
-[TODO]
-
-## Integrating with GitLab Pipelines
-
-[TODO]
