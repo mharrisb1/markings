@@ -137,11 +137,11 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	newContent := removeOldMarkings(content, style)
 
 	if expectedHeader != "" {
-		newContent = expectedHeader + newContent
+		newContent = expectedHeader + strings.TrimLeft(newContent, "\n")
 	}
 	if expectedFooter != "" {
-		// Ensure there's a newline before appending the footer
-		if !strings.HasSuffix(newContent, "\n") {
+		newContent = strings.TrimRight(newContent, "\n")
+		if !strings.HasPrefix(expectedFooter, "\n") {
 			newContent += "\n"
 		}
 		newContent += expectedFooter
@@ -201,3 +201,8 @@ func removeOldMarkings(content string, style config.CommentStyle) string {
 
 	return strings.Join(result, "\n")
 }
+// markings:managed
+//
+// Copyright (c) 2026 Michael Harris
+//
+// markings:managed
