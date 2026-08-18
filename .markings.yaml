@@ -1,16 +1,16 @@
 templates:
   mit_header: |
-    Copyright (c) {{ .Year }} {{ .Author }}
+    File: {{ filename }}
+    Copyright (c) {{ year }} {{ .Author }}
     SPDX-License-Identifier: MIT
 
     This software is released under the MIT License.
     https://opensource.org/licenses/MIT
 
   mit_footer: |
-    Copyright (c) {{ .Year }} {{ .Author }}
+    Copyright (c) {{ year }} {{ .Author }}
 
 data:
-  Year: 2026
   Author: Michael Harris
 
 comment_styles:

@@ -1,5 +1,6 @@
 // markings:managed
 //
+// File: util.go
 // Copyright (c) 2026 Michael Harris
 // SPDX-License-Identifier: MIT
 //
@@ -95,6 +96,7 @@ func expandArgs(args []string, excludeGlobs []string, includeGlobs []string) ([]
 
 	return collected, nil
 }
+
 // markings:managed
 //
 // Copyright (c) 2026 Michael Harris

@@ -1,5 +1,6 @@
 // markings:managed
 //
+// File: root.go
 // Copyright (c) 2026 Michael Harris
 // SPDX-License-Identifier: MIT
 //

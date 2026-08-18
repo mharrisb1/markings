@@ -1,5 +1,6 @@
 // markings:managed
 //
+// File: migrate.go
 // Copyright (c) 2026 Michael Harris
 // SPDX-License-Identifier: MIT
 //

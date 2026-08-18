@@ -1,5 +1,6 @@
 // markings:managed
 //
+// File: util_test.go
 // Copyright (c) 2026 Michael Harris
 // SPDX-License-Identifier: MIT
 //
@@ -120,6 +121,7 @@ func TestExpandArgs(t *testing.T) {
 		})
 	}
 }
+
 // markings:managed
 //
 // Copyright (c) 2026 Michael Harris

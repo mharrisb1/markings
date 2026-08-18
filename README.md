@@ -65,6 +65,50 @@ rules:
     comment_style: go_line
 ```
 
+## Template Functions
+
+You can use built-in macros and logic inside your templates.
+
+```yaml
+templates:
+  dynamic_header: |
+    File: {{ filename }}
+    Copyright (c) {{ year }} {{ upper .Company }}
+```
+
+### Custom Macros
+
+| Function                          | Description                     | Example                           |
+| --------------------------------- | ------------------------------- | --------------------------------- |
+| `upper`                           | Returns uppercase string        | `{{ upper .Name }}`               |
+| `lower`                           | Returns lowercase string        | `{{ lower .Name }}`               |
+| `title`                           | Returns titlecase string        | `{{ title .Name }}`               |
+| `trim` / `trimLeft` / `trimRight` | Removes whitespace              | `{{ trim .Name }}`                |
+| `trimPrefix` / `trimSuffix`       | Removes prefix or suffix        | `{{ trimPrefix .Name "v" }}`      |
+| `replace`                         | Replaces substring              | `{{ replace .Name "old" "new" }}` |
+| `contains`                        | Checks if substring exists      | `{{ if contains .Name "abc" }}`   |
+| `hasPrefix` / `hasSuffix`         | Checks string boundaries        | `{{ if hasPrefix .Name "test" }}` |
+| `split`                           | Splits string by separator      | `{{ split .Name "," }}`           |
+| `join`                            | Joins array into string         | `{{ join .List "," }}`            |
+| `time`                            | Formats current time (Go style) | `{{ time "02/01/06" }}`           |
+| `date`                            | Current date (YYYY-MM-DD)       | `{{ date }}`                      |
+| `year`                            | Current YYYY year               | `{{ year }}`                      |
+| `month`                           | Current MM month                | `{{ month }}`                     |
+| `day`                             | Current DD day                  | `{{ day }}`                       |
+| `filename`                        | Current filename                | `{{ filename }}`                  |
+
+### Standard Macros
+
+| Function             | Description                     | Example                     |
+| -------------------- | ------------------------------- | --------------------------- |
+| `eq` / `ne`          | Equal / Not equal               | `{{ if eq .Role "admin" }}` |
+| `lt` / `le`          | Less than / Less or equal       | `{{ if lt .Age 18 }}`       |
+| `gt` / `ge`          | Greater than / Greater or equal | `{{ if gt .Score 90 }}`     |
+| `and` / `or` / `not` | Logical AND / OR / NOT          | `{{ if and .A .B }}`        |
+| `len`                | Length of string, slice, map    | `{{ len .Users }}`          |
+| `index`              | Value from map/slice by index   | `{{ index .List 0 }}`       |
+| `slice`              | Slices array or string          | `{{ slice .Name 0 3 }}`     |
+
 ## Usage
 
 You can pass specific files, directories, or nothing at all (which defaults to scanning the current directory). Files are automatically recursively discovered and filtered against your `exclude` and `include` rules.
