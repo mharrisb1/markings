@@ -1,13 +1,13 @@
 - id: markings
   name: markings (fix)
   description: Automatically applies or updates banner markings in source code.
-  entry: markings fix
-  language: golang
-  types: [file]
+  entry: scripts/run-markings.sh fix
+  language: script
+  types: [text]
 
 - id: markings-check
   name: markings (check)
   description: Verifies that source files have the correct banner markings.
-  entry: markings check
-  language: golang
-  types: [file]
+  entry: scripts/run-markings.sh check
+  language: script
+  types: [text]
