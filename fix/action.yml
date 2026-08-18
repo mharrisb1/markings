@@ -12,7 +12,7 @@ runs:
   using: "composite"
   steps:
     - name: Ensure Setup
-      uses: mharrisb1/markings/setup@v1
+      uses: ./setup
       with:
         version: ${{ inputs.version }}
     - name: Run Fix
