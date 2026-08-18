@@ -3,6 +3,7 @@ set -e
 
 # Determine version from the pre-commit hook's git tag
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+git -C "$SCRIPT_DIR" fetch --tags --quiet 2>/dev/null || true
 VERSION=$(git -C "$SCRIPT_DIR" describe --tags --exact-match 2>/dev/null || echo "")
 
 if [ -z "$VERSION" ]; then
