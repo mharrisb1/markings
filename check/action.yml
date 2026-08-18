@@ -1,0 +1,20 @@
+name: "Markings Check"
+description: "Verifies banner markings are correctly applied"
+inputs:
+  version:
+    description: "Version of markings to install"
+    required: false
+    default: "latest"
+  args:
+    description: "Additional arguments for markings check"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Ensure Setup
+      uses: mharrisb1/markings/setup@v1
+      with:
+        version: ${{ inputs.version }}
+    - name: Run Check
+      shell: bash
+      run: markings check ${{ inputs.args }}

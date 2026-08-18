@@ -126,7 +126,32 @@ markings fix src/
 markings migrate-marker "markings:managed"
 ```
 
-## Pre-Commit
+## CI Integrations
+
+You can easily integrate `markings` into your CI/CD pipelines to automatically check or fix markings. By default, it looks for `.markings.yaml` in the root, but you can override this.
+
+### GitHub Actions
+
+We provide native GitHub Actions to run markings.
+
+```yaml
+steps:
+  - uses: actions/checkout@v4
+
+  # Optional: Explicitly install the CLI to your PATH for custom scripts
+  # - uses: mharrisb1/markings/setup@v1
+
+  # Automatically check for correct markings
+  - uses: mharrisb1/markings/check@v1
+    with:
+      args: "--config custom/path/.markings.yaml" # Optional arguments
+
+
+  # Or automatically fix markings
+  # - uses: mharrisb1/markings/fix@v1
+```
+
+### Pre-Commit
 
 To automatically enforce or update markings during commits, add the following to your `.pre-commit-config.yaml`.
 
@@ -138,6 +163,8 @@ repos:
       # Automatically fix markings
       - id: markings
         types: [text]
+        args: ["--config", "custom/path/.markings.yaml"] # Optional arguments
+
 
       # Or just check without modifying
       # - id: markings-check

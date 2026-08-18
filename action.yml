@@ -1,0 +1,16 @@
+name: "Markings"
+description: "Stub: Don't use this action directly. Please use one of the modular sub-actions."
+branding:
+  icon: "file-text"
+  color: "blue"
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        echo "::error::This root action is a stub for the GitHub Marketplace. Please use one of the modular actions:"
+        echo "::error::  - uses: mharrisb1/markings/setup@v1"
+        echo "::error::  - uses: mharrisb1/markings/check@v1"
+        echo "::error::  - uses: mharrisb1/markings/fix@v1"
+        echo "::error::See https://github.com/mharrisb1/markings for documentation."
+        exit 1
