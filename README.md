@@ -171,7 +171,7 @@ To automatically enforce or update markings during commits, add the following to
 ```yaml
 repos:
   - repo: https://github.com/mharrisb1/markings
-    rev: v0.1.1
+    rev: v0.2.0
     hooks:
       # Automatically fix markings
       - id: markings
