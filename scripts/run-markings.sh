@@ -4,7 +4,7 @@ set -e
 # Determine version from the pre-commit hook's git tag
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 git -C "$SCRIPT_DIR" fetch --tags --quiet 2>/dev/null || true
-VERSION=$(git -C "$SCRIPT_DIR" describe --tags --exact-match 2>/dev/null || echo "")
+VERSION=$(git -C "$SCRIPT_DIR" describe --tags --match "v*.*" --exact-match 2>/dev/null || echo "")
 
 if [ -z "$VERSION" ]; then
     echo "markings: Error: Could not determine release version. Ensure you are using a tagged release in your .pre-commit-config.yaml." >&2
@@ -64,11 +64,19 @@ if [ ! -x "$MARKINGS_BIN" ]; then
     mkdir -p "$BIN_DIR"
     
     if [ "$EXT" = "zip" ]; then
-        curl -sL -o "$BIN_DIR/archive.zip" "$DOWNLOAD_URL"
+        if ! curl -sfL -o "$BIN_DIR/archive.zip" "$DOWNLOAD_URL"; then
+            echo "markings: Error: Failed to download from $DOWNLOAD_URL" >&2
+            rm -rf "$BIN_DIR"
+            exit 1
+        fi
         unzip -q -o "$BIN_DIR/archive.zip" "markings.exe" -d "$BIN_DIR"
         rm "$BIN_DIR/archive.zip"
     else
-        curl -sL "$DOWNLOAD_URL" | tar -xz -C "$BIN_DIR" markings
+        if ! curl -sfL "$DOWNLOAD_URL" | tar -xz -C "$BIN_DIR" markings; then
+            echo "markings: Error: Failed to download or extract from $DOWNLOAD_URL" >&2
+            rm -rf "$BIN_DIR"
+            exit 1
+        fi
     fi
     
     chmod +x "$MARKINGS_BIN"
