@@ -1,4 +1,4 @@
-# Markings
+# // Markings
 
 Automatically enforce and update source code banner markings.
 
@@ -26,9 +26,7 @@ package main
 Currently, `markings` requires a local Go toolchain to install:
 
 ```bash
-git clone https://github.com/mharrisb1/markings.git
-cd markings
-go install .
+go install github.com/mharrisb1/markings
 ```
 
 ## Configuration
@@ -40,6 +38,10 @@ Create a `.markings.yaml` file in your repository root to define templates and m
 
 ```yaml
 marker: "my-custom-marker:managed" # Optional: defaults to "markings:managed"
+
+exclude:
+  - "**/.git"
+  - "**/node_modules"
 
 templates:
   mit_header: |
@@ -65,17 +67,17 @@ rules:
 
 ## Usage
 
-You must explicitly pass the files you want to check or fix. Files that do not match any `rules` in your config are ignored.
+You can pass specific files, directories, or nothing at all (which defaults to scanning the current directory). Files are automatically recursively discovered and filtered against your `exclude` and `include` rules.
 
 ```bash
-# Check if files have correct markings (exits non-zero if missing/incorrect)
-markings check main.go utils/*.go
+# Check all files in the current directory recursively
+markings check
 
-# Automatically inject or update markings in files
-markings fix main.go utils/*.go
+# Automatically inject or update markings in a specific folder
+markings fix src/
 
-# Migrate files from an old marker to the new one defined in your config
-markings migrate-marker "markings:managed" main.go utils/*.go
+# Migrate the entire repository to a new marker
+markings migrate-marker "markings:managed"
 ```
 
 ## Pre-Commit

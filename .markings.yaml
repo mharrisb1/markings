@@ -27,3 +27,6 @@ rules:
       template: mit_footer
       newline_before: true
     comment_style: go_line
+
+exclude:
+  - "**/.git/"

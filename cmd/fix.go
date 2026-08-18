@@ -12,7 +12,7 @@ package cmd
 
 import (
 	"fmt"
-	
+
 	"markings/internal/config"
 	"markings/internal/engine"
 
@@ -20,7 +20,7 @@ import (
 )
 
 var fixCmd = &cobra.Command{
-	Use:   "fix [files...]",
+	Use:   "fix [paths...]",
 	Short: "Adds or updates the markings on the specified files",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := config.Load(cfgFile)
@@ -33,11 +33,16 @@ var fixCmd = &cobra.Command{
 			return fmt.Errorf("failed to initialize engine: %w", err)
 		}
 
-		for _, file := range args {
-			_, err := eng.ProcessFile(file, true)
+		files, err := expandArgs(args, cfg.Exclude, cfg.Include)
+		if err != nil {
+			return fmt.Errorf("failed to expand files: %w", err)
+		}
+
+		for _, file := range files {
+			foundRule, _, err := eng.ProcessFile(file, true)
 			if err != nil {
 				fmt.Printf("Error fixing %s: %v\n", file, err)
-			} else {
+			} else if foundRule {
 				fmt.Printf("Fixed %s\n", file)
 			}
 		}

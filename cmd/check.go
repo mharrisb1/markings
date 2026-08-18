@@ -13,7 +13,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	
+
 	"markings/internal/config"
 	"markings/internal/engine"
 
@@ -21,7 +21,7 @@ import (
 )
 
 var checkCmd = &cobra.Command{
-	Use:   "check [files...]",
+	Use:   "check [paths...]",
 	Short: "Checks if the specified files have the correct markings",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cfg, err := config.Load(cfgFile)
@@ -35,8 +35,13 @@ var checkCmd = &cobra.Command{
 		}
 
 		hasErrors := false
-		for _, file := range args {
-			valid, err := eng.ProcessFile(file, false)
+		files, err := expandArgs(args, cfg.Exclude, cfg.Include)
+		if err != nil {
+			return fmt.Errorf("failed to expand files: %w", err)
+		}
+
+		for _, file := range files {
+			_, valid, err := eng.ProcessFile(file, false)
 			if err != nil {
 				fmt.Printf("Error processing %s: %v\n", file, err)
 				hasErrors = true
@@ -51,7 +56,7 @@ var checkCmd = &cobra.Command{
 		if hasErrors {
 			os.Exit(1)
 		}
-		
+
 		fmt.Println("All files have the correct markings.")
 		return nil
 	},

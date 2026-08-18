@@ -23,6 +23,8 @@ type Config struct {
 	CommentStyles map[string]CommentStyle `yaml:"comment_styles"`
 	Rules         []Rule                  `yaml:"rules"`
 	Marker        string                  `yaml:"marker"`
+	Exclude       []string                `yaml:"exclude"`
+	Include       []string                `yaml:"include"`
 }
 
 type CommentStyle struct {
