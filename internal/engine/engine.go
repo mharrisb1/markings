@@ -169,10 +169,14 @@ func (e *Engine) executeTemplate(c *config.MarkingConfig, style config.CommentSt
 	}
 
 	out := comments.Format(buf.String(), style, e.config.GetMarker())
+	
+	out = strings.TrimRight(out, "\n")
 	if c.NewlineBefore {
 		out = "\n" + out
 	}
 	if c.NewlineAfter {
+		out += "\n\n"
+	} else {
 		out += "\n"
 	}
 
