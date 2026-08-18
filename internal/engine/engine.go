@@ -77,21 +77,22 @@ func (e *Engine) matchRule(path string) (*config.Rule, error) {
 
 // ProcessFile checks a file against the rules and fixes it if requested.
 // Returns true if the file has the correct markings (or was successfully fixed).
-func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
+func (e *Engine) ProcessFile(path string, fix bool) (bool, bool, error) {
 	rule, err := e.matchRule(path)
+	foundRule := rule != nil
 	if err != nil || rule == nil {
-		return true, err // No rule applies, so it's technically valid
+		return foundRule, true, err // No rule applies, so it's technically valid
 	}
 
 	contentBytes, err := os.ReadFile(path)
 	if err != nil {
-		return false, err
+		return foundRule, false, err
 	}
 	content := string(contentBytes)
 
 	style, ok := e.config.CommentStyles[rule.CommentStyle]
 	if !ok {
-		return false, fmt.Errorf("comment style %q not found", rule.CommentStyle)
+		return foundRule, false, fmt.Errorf("comment style %q not found", rule.CommentStyle)
 	}
 
 	expectedHeader := ""
@@ -130,7 +131,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	}
 
 	if isValid || !fix {
-		return isValid, nil
+		return foundRule, isValid, nil
 	}
 
 	// Fix logic: remove old markers and inject new ones
@@ -148,7 +149,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, error) {
 	}
 
 	err = os.WriteFile(path, []byte(newContent), 0644)
-	return err == nil, err
+	return foundRule, err == nil, err
 }
 
 type parseState int

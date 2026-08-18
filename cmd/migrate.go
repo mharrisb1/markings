@@ -21,16 +21,19 @@ import (
 )
 
 var migrateMarkerCmd = &cobra.Command{
-	Use:   "migrate-marker <old-marker> [files...]",
+	Use:   "migrate-marker <old-marker> [paths...]",
 	Short: "Migrate existing markings to a new marker defined in the config",
 	Args:  cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		oldMarker := args[0]
-		files := args[1:]
-
 		cfg, err := config.Load(cfgFile)
 		if err != nil {
 			return fmt.Errorf("failed to load config: %w", err)
+		}
+
+		oldMarker := args[0]
+		files, err := expandArgs(args[1:], cfg.Exclude, cfg.Include)
+		if err != nil {
+			return fmt.Errorf("failed to expand files: %w", err)
 		}
 
 		newMarker := cfg.GetMarker()
@@ -72,6 +75,7 @@ func migrateFile(path, oldMarker, newMarker string) error {
 func init() {
 	rootCmd.AddCommand(migrateMarkerCmd)
 }
+
 // markings:managed
 //
 // Copyright (c) 2026 Michael Harris
