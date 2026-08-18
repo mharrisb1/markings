@@ -130,8 +130,6 @@ markings migrate-marker "markings:managed"
 
 To automatically enforce or update markings during commits, add the following to your `.pre-commit-config.yaml`.
 
-_(Note: This currently requires Go to be installed on the user's system)._
-
 ```yaml
 repos:
   - repo: https://github.com/mharrisb1/markings
