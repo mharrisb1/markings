@@ -1,5 +1,6 @@
 // markings:managed
 //
+// File: config.go
 // Copyright (c) 2026 Michael Harris
 // SPDX-License-Identifier: MIT
 //

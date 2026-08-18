@@ -1,5 +1,6 @@
 // markings:managed
 //
+// File: engine_test.go
 // Copyright (c) 2026 Michael Harris
 // SPDX-License-Identifier: MIT
 //
@@ -102,6 +103,44 @@ var y = 2;`,
 				t.Errorf("Expected:\n%s\n\nGot:\n%s", tt.expected, result)
 			}
 		})
+	}
+}
+
+func TestExecuteTemplate(t *testing.T) {
+	cfg := &config.Config{
+		Marker: config.DefaultMarker,
+		Templates: map[string]string{
+			"test": "File: {{ filename }}, Upper: {{ upper .TestVar }}, Replace: {{ replace .TestVar `foo` `bar` }}",
+		},
+		Data: map[string]interface{}{
+			"TestVar": "foobar",
+		},
+	}
+
+	eng, err := New(cfg)
+	if err != nil {
+		t.Fatalf("Failed to create engine: %v", err)
+	}
+
+	style := config.CommentStyle{
+		Prefix: "// ",
+	}
+
+	ruleHeader := &config.MarkingConfig{
+		Template:      "test",
+		NewlineBefore: true,
+		NewlineAfter:  true,
+	}
+
+	out, err := eng.executeTemplate(ruleHeader, style, "/path/to/my_file.go")
+	if err != nil {
+		t.Fatalf("executeTemplate failed: %v", err)
+	}
+
+	expected := "\n// " + config.DefaultMarker + "\n//\n// File: my_file.go, Upper: FOOBAR, Replace: barbar\n//\n// " + config.DefaultMarker + "\n\n"
+
+	if out != expected {
+		t.Errorf("Expected:\n%q\n\nGot:\n%q", expected, out)
 	}
 }
 
