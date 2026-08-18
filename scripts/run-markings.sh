@@ -65,8 +65,6 @@ if [ ! -x "$MARKINGS_BIN" ]; then
     TMP_DIR="$BIN_DIR/tmp.$$"
     mkdir -p "$TMP_DIR"
     
-    echo "Downloading markings ${VERSION} for ${OS}-${ARCH}..." >&2
-    
     if [ "$EXT" = "zip" ]; then
         if ! curl -sfL -o "$TMP_DIR/archive.zip" "$DOWNLOAD_URL"; then
             echo "markings: Error: Failed to download from $DOWNLOAD_URL" >&2
