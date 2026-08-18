@@ -60,26 +60,33 @@ fi
 if [ ! -x "$MARKINGS_BIN" ]; then
     DOWNLOAD_URL="https://github.com/mharrisb1/markings/releases/download/${VERSION}/markings_${OS}_${ARCH}.${EXT}"
     
+    # Use a lock-free atomic download approach to prevent "Text file busy"
+    # when pre-commit runs multiple hooks in parallel.
+    TMP_DIR="$BIN_DIR/tmp.$$"
+    mkdir -p "$TMP_DIR"
+    
     echo "Downloading markings ${VERSION} for ${OS}-${ARCH}..." >&2
-    mkdir -p "$BIN_DIR"
     
     if [ "$EXT" = "zip" ]; then
-        if ! curl -sfL -o "$BIN_DIR/archive.zip" "$DOWNLOAD_URL"; then
+        if ! curl -sfL -o "$TMP_DIR/archive.zip" "$DOWNLOAD_URL"; then
             echo "markings: Error: Failed to download from $DOWNLOAD_URL" >&2
-            rm -rf "$BIN_DIR"
+            rm -rf "$TMP_DIR"
             exit 1
         fi
-        unzip -q -o "$BIN_DIR/archive.zip" "markings.exe" -d "$BIN_DIR"
-        rm "$BIN_DIR/archive.zip"
+        unzip -q -o "$TMP_DIR/archive.zip" "markings.exe" -d "$TMP_DIR"
+        chmod +x "$TMP_DIR/markings.exe"
+        mv -f "$TMP_DIR/markings.exe" "$MARKINGS_BIN" 2>/dev/null || true
     else
-        if ! curl -sfL "$DOWNLOAD_URL" | tar -xz -C "$BIN_DIR" markings; then
+        if ! curl -sfL "$DOWNLOAD_URL" | tar -xz -C "$TMP_DIR" markings; then
             echo "markings: Error: Failed to download or extract from $DOWNLOAD_URL" >&2
-            rm -rf "$BIN_DIR"
+            rm -rf "$TMP_DIR"
             exit 1
         fi
+        chmod +x "$TMP_DIR/markings"
+        mv -f "$TMP_DIR/markings" "$MARKINGS_BIN" 2>/dev/null || true
     fi
     
-    chmod +x "$MARKINGS_BIN"
+    rm -rf "$TMP_DIR"
 fi
 
 exec "$MARKINGS_BIN" "$@"
