@@ -158,7 +158,7 @@ You can use the published Docker image to run markings natively in GitLab CI or 
 ```yaml
 markings_check:
   image:
-    name: ghcr.io/mharrisb1/markings:v1
+    name: ghcr.io/mharrisb1/markings:v0
     entrypoint: [""]
   script:
     - markings check
