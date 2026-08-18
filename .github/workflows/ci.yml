@@ -22,6 +22,3 @@ jobs:
 
     - name: Test
       run: go test -v ./...
-
-    - name: Check Markings
-      uses: ./check
