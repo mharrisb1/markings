@@ -151,6 +151,19 @@ steps:
   # - uses: mharrisb1/markings/fix@v1
 ```
 
+### GitLab CI
+
+You can use the published Docker image to run markings natively in GitLab CI or other Docker-based runners.
+
+```yaml
+markings_check:
+  image:
+    name: ghcr.io/mharrisb1/markings:v1
+    entrypoint: [""]
+  script:
+    - markings check
+```
+
 ### Pre-Commit
 
 To automatically enforce or update markings during commits, add the following to your `.pre-commit-config.yaml`.

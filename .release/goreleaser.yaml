@@ -35,3 +35,17 @@ changelog:
     exclude:
       - '^docs:'
       - '^test:'
+
+dockers:
+  - dockerfile: .release/Dockerfile
+    image_templates:
+      - "ghcr.io/mharrisb1/markings:latest"
+      - "ghcr.io/mharrisb1/markings:{{ .Tag }}"
+      - "ghcr.io/mharrisb1/markings:v{{ .Major }}"
+      - "ghcr.io/mharrisb1/markings:v{{ .Major }}.{{ .Minor }}"
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
