@@ -23,10 +23,12 @@ package main
 
 ## Installation
 
-Currently, `markings` requires a local Go toolchain to install:
+Download the latest pre-compiled binary for your OS and architecture from the [GitHub Releases](https://github.com/mharrisb1/markings/releases) page.
+
+Alternatively, if you have a local Go toolchain installed, you can build from source:
 
 ```bash
-go install github.com/mharrisb1/markings
+go install github.com/mharrisb1/markings@latest
 ```
 
 ## Configuration
