@@ -2,7 +2,7 @@ name: "Setup Markings"
 description: "Downloads and installs the markings CLI"
 inputs:
   version:
-    description: "Version to install (e.g., v0.1.0 or latest)"
+    description: "Version to install (e.g., v0.1.0, latest, or local)"
     required: false
     default: "latest"
 runs:
@@ -12,6 +12,17 @@ runs:
       shell: bash
       run: |
         VERSION="${{ inputs.version }}"
+
+        if [ "$VERSION" = "local" ]; then
+          echo "Building markings from local source..."
+          BIN_DIR="$RUNNER_TEMP/markings-local"
+          mkdir -p "$BIN_DIR"
+          go build -o "$BIN_DIR/markings" .
+          chmod +x "$BIN_DIR/markings"
+          echo "$BIN_DIR" >> $GITHUB_PATH
+          exit 0
+        fi
+
         if [ "$VERSION" = "latest" ] || [ -z "$VERSION" ]; then
           VERSION=$(curl -sL https://api.github.com/repos/mharrisb1/markings/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         fi
