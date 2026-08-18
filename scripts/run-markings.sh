@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-# Try to determine version from git tag
-VERSION=$(git describe --tags --exact-match 2>/dev/null || echo "")
+# Determine version from the pre-commit hook's git tag
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VERSION=$(git -C "$SCRIPT_DIR" describe --tags --exact-match 2>/dev/null || echo "")
 
-# Fallback for local development or untagged commits
 if [ -z "$VERSION" ]; then
-    if command -v go &> /dev/null; then
-        exec go run main.go "$@"
-    else
-        echo "markings: Error: No git tag found and 'go' is not installed." >&2
-        exit 1
-    fi
+    echo "markings: Error: Could not determine release version. Ensure you are using a tagged release in your .pre-commit-config.yaml." >&2
+    exit 1
 fi
 
 OS=$(uname -s)

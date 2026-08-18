@@ -139,16 +139,16 @@ steps:
   - uses: actions/checkout@v4
 
   # Optional: Explicitly install the CLI to your PATH for custom scripts
-  # - uses: mharrisb1/markings/setup@v1
+  # - uses: mharrisb1/markings/setup@v0
 
   # Automatically check for correct markings
-  - uses: mharrisb1/markings/check@v1
+  - uses: mharrisb1/markings/check@v0
     with:
       args: "--config custom/path/.markings.yaml" # Optional arguments
 
 
   # Or automatically fix markings
-  # - uses: mharrisb1/markings/fix@v1
+  # - uses: mharrisb1/markings/fix@v0
 ```
 
 ### GitLab CI
@@ -171,7 +171,7 @@ To automatically enforce or update markings during commits, add the following to
 ```yaml
 repos:
   - repo: https://github.com/mharrisb1/markings
-    rev: v0.2.0
+    rev: <VERSION>
     hooks:
       # Automatically fix markings
       - id: markings

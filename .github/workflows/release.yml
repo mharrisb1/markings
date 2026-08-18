@@ -33,9 +33,9 @@ jobs:
           args: release --clean --config .release/goreleaser.yaml
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Update v1 tag
+      - name: Update v0 tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -fa v1 -m "Update v1 tag"
-          git push origin v1 --force
+          git tag -fa v0 -m "Update v0 tag"
+          git push origin v0 --force
