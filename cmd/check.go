@@ -15,8 +15,8 @@ import (
 	"fmt"
 	"os"
 
-	"markings/internal/config"
-	"markings/internal/engine"
+	"github.com/mharrisb1/markings/internal/config"
+	"github.com/mharrisb1/markings/internal/engine"
 
 	"github.com/spf13/cobra"
 )

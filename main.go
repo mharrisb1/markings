@@ -11,7 +11,7 @@
 
 package main
 
-import "markings/cmd"
+import "github.com/mharrisb1/markings/cmd"
 
 func main() {
 	cmd.Execute()

@@ -12,8 +12,9 @@
 package engine
 
 import (
-	"markings/internal/config"
 	"testing"
+
+	"github.com/mharrisb1/markings/internal/config"
 )
 
 func TestRemoveOldMarkings(t *testing.T) {

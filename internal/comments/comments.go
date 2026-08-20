@@ -12,8 +12,9 @@
 package comments
 
 import (
-	"markings/internal/config"
 	"strings"
+
+	"github.com/mharrisb1/markings/internal/config"
 )
 
 // Format applies the given comment style to the raw text and adds demarcation markers.

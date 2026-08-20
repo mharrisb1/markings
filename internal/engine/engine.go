@@ -20,8 +20,8 @@ import (
 	"text/template"
 	"time"
 
-	"markings/internal/comments"
-	"markings/internal/config"
+	"github.com/mharrisb1/markings/internal/comments"
+	"github.com/mharrisb1/markings/internal/config"
 
 	"github.com/bmatcuk/doublestar/v4"
 )
@@ -39,10 +39,10 @@ func New(cfg *config.Config) (*Engine, error) {
 	}
 
 	funcMap := template.FuncMap{
-		"upper":     strings.ToUpper,
-		"lower":     strings.ToLower,
-		"title":     strings.ToTitle,
-		"trim":      strings.Trim,
+		"upper":      strings.ToUpper,
+		"lower":      strings.ToLower,
+		"title":      strings.ToTitle,
+		"trim":       strings.Trim,
 		"trimLeft":   strings.TrimLeft,
 		"trimRight":  strings.TrimRight,
 		"trimPrefix": strings.TrimPrefix,
@@ -53,12 +53,12 @@ func New(cfg *config.Config) (*Engine, error) {
 		"split":      strings.Split,
 		"join":       strings.Join,
 		"replace":    strings.ReplaceAll,
-		"time":      func(layout string) string { return time.Now().Format(layout) },
-		"year":      func() string { return time.Now().Format("2006") },
-		"month":     func() string { return time.Now().Format("01") },
-		"day":       func() string { return time.Now().Format("02") },
-		"date":      func() string { return time.Now().Format("2006-01-02") },
-		"filename":  func() string { return "" }, // placeholder
+		"time":       func(layout string) string { return time.Now().Format(layout) },
+		"year":       func() string { return time.Now().Format("2006") },
+		"month":      func() string { return time.Now().Format("01") },
+		"day":        func() string { return time.Now().Format("02") },
+		"date":       func() string { return time.Now().Format("2006-01-02") },
+		"filename":   func() string { return "" }, // placeholder
 	}
 
 	for name, tmplStr := range cfg.Templates {
@@ -169,7 +169,7 @@ func (e *Engine) executeTemplate(c *config.MarkingConfig, style config.CommentSt
 	}
 
 	out := comments.Format(buf.String(), style, e.config.GetMarker())
-	
+
 	out = strings.TrimRight(out, "\n")
 	if c.NewlineBefore {
 		out = "\n" + out
@@ -233,6 +233,7 @@ func removeOldMarkings(content string, style config.CommentStyle, marker string)
 
 	return strings.Join(result, "\n")
 }
+
 // markings:managed
 //
 // Copyright (c) 2026 Michael Harris
