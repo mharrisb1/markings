@@ -16,7 +16,7 @@ import (
 	"os"
 	"strings"
 
-	"markings/internal/config"
+	"github.com/mharrisb1/markings/internal/config"
 
 	"github.com/spf13/cobra"
 )
