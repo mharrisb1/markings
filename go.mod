@@ -1,4 +1,4 @@
-module markings
+module github.com/mharrisb1/markings
 
 go 1.23.4
 
