@@ -40,6 +40,7 @@ Create a `.markings.yaml` file in your repository root to define templates and m
 
 ```yaml
 marker: "my-custom-marker:managed" # Optional: defaults to "markings:managed"
+mark_empty_files: false # Optional: defaults to false
 
 exclude:
   - "**/.git"

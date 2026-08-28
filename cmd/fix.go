@@ -40,10 +40,10 @@ var fixCmd = &cobra.Command{
 		}
 
 		for _, file := range files {
-			foundRule, _, err := eng.ProcessFile(file, true)
-			if err != nil {
+			res := eng.ProcessFile(file, true)
+			if res.Err != nil {
 				fmt.Printf("Error fixing %s: %v\n", file, err)
-			} else if foundRule {
+			} else if res.FoundRule {
 				fmt.Printf("Fixed %s\n", file)
 			}
 		}

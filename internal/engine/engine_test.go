@@ -12,6 +12,8 @@
 package engine
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/mharrisb1/markings/internal/config"
@@ -182,6 +184,74 @@ func TestExecuteTemplate_BlockStyle(t *testing.T) {
 
 	if out != expected {
 		t.Errorf("Expected:\n%q\n\nGot:\n%q", expected, out)
+	}
+}
+
+func TestProcessFile_EmptyFile(t *testing.T) {
+	tempDir := t.TempDir()
+	emptyFilePath := filepath.Join(tempDir, "empty.go")
+	if err := os.WriteFile(emptyFilePath, []byte(""), 0644); err != nil {
+		t.Fatalf("Failed to write temp file: %v", err)
+	}
+
+	tests := []struct {
+		name           string
+		markEmptyFiles bool
+		expectedFound  bool
+		expectedValid  bool
+	}{
+		{
+			name:           "Skip empty files",
+			markEmptyFiles: false,
+			expectedFound:  false,
+			expectedValid:  true,
+		},
+		{
+			name:           "Process empty files",
+			markEmptyFiles: true,
+			expectedFound:  true,
+			expectedValid:  false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cfg := &config.Config{
+				MarkEmptyFiles: tt.markEmptyFiles,
+				Rules: []config.Rule{
+					{
+						Match:        filepath.ToSlash(filepath.Join(tempDir, "*.go")),
+						CommentStyle: "line",
+						Header: &config.MarkingConfig{
+							Template: "test",
+						},
+					},
+				},
+				CommentStyles: map[string]config.CommentStyle{
+					"line": {Prefix: "// "},
+				},
+				Templates: map[string]string{
+					"test": "Header",
+				},
+			}
+
+			eng, err := New(cfg)
+			if err != nil {
+				t.Fatalf("Failed to create engine: %v", err)
+			}
+
+			res := eng.ProcessFile(emptyFilePath, false)
+
+			if res.Err != nil {
+				t.Fatalf("Unexpected error: %v", res.Err)
+			}
+			if res.FoundRule != tt.expectedFound {
+				t.Errorf("Expected FoundRule=%v, got %v", tt.expectedFound, res.FoundRule)
+			}
+			if res.IsValid != tt.expectedValid {
+				t.Errorf("Expected IsValid=%v, got %v", tt.expectedValid, res.IsValid)
+			}
+		})
 	}
 }
 

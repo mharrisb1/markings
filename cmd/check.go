@@ -42,13 +42,13 @@ var checkCmd = &cobra.Command{
 		}
 
 		for _, file := range files {
-			_, valid, err := eng.ProcessFile(file, false)
-			if err != nil {
+			res := eng.ProcessFile(file, false)
+			if res.Err != nil {
 				fmt.Printf("Error processing %s: %v\n", file, err)
 				hasErrors = true
 				continue
 			}
-			if !valid {
+			if !res.IsValid {
 				fmt.Printf("File %s is missing required markings or has incorrect markings\n", file)
 				hasErrors = true
 			}
