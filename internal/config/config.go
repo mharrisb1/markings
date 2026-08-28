@@ -19,13 +19,14 @@ import (
 )
 
 type Config struct {
-	Templates     map[string]string       `yaml:"templates"`
-	Data          map[string]any          `yaml:"data"`
-	CommentStyles map[string]CommentStyle `yaml:"comment_styles"`
-	Rules         []Rule                  `yaml:"rules"`
-	Marker        string                  `yaml:"marker"`
-	Exclude       []string                `yaml:"exclude"`
-	Include       []string                `yaml:"include"`
+	Templates      map[string]string       `yaml:"templates"`
+	Data           map[string]any          `yaml:"data"`
+	CommentStyles  map[string]CommentStyle `yaml:"comment_styles"`
+	Rules          []Rule                  `yaml:"rules"`
+	Marker         string                  `yaml:"marker"`
+	Exclude        []string                `yaml:"exclude"`
+	Include        []string                `yaml:"include"`
+	MarkEmptyFiles bool                    `yaml:"mark_empty_files"`
 }
 
 type CommentStyle struct {

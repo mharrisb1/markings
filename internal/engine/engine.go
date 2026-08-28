@@ -31,6 +31,12 @@ type Engine struct {
 	templates map[string]*template.Template
 }
 
+type ProcessResult struct {
+	FoundRule bool
+	IsValid   bool
+	Err       error
+}
+
 // New creates a new Engine and pre-compiles all templates into their final formatted strings.
 func New(cfg *config.Config) (*Engine, error) {
 	eng := &Engine{
@@ -85,34 +91,37 @@ func (e *Engine) matchRule(path string) (*config.Rule, error) {
 	return nil, nil // No match
 }
 
-func (e *Engine) ProcessFile(path string, fix bool) (bool, bool, error) {
+func (e *Engine) ProcessFile(path string, fix bool) ProcessResult {
 	rule, err := e.matchRule(path)
 	if err != nil {
-		return false, false, err
+		return ProcessResult{false, false, err}
 	}
 	if rule == nil {
-		return false, true, nil // No rule applies, so it's technically valid
+		return ProcessResult{false, true, nil} // No rule applies, so it's technically valid
 	}
 
 	contentBytes, err := os.ReadFile(path)
 	if err != nil {
-		return true, false, err
+		return ProcessResult{true, false, err}
 	}
 	content := string(contentBytes)
+	if content == "" && !e.config.MarkEmptyFiles {
+		return ProcessResult{false, true, nil}
+	}
 
 	style, ok := e.config.CommentStyles[rule.CommentStyle]
 	if !ok {
-		return true, false, fmt.Errorf("comment style %q not found", rule.CommentStyle)
+		return ProcessResult{true, false, fmt.Errorf("comment style %q not found", rule.CommentStyle)}
 	}
 
 	expectedHeader, err := e.executeTemplate(rule.Header, style, path)
 	if err != nil {
-		return true, false, err
+		return ProcessResult{true, false, err}
 	}
 
 	expectedFooter, err := e.executeTemplate(rule.Footer, style, path)
 	if err != nil {
-		return true, false, err
+		return ProcessResult{true, false, err}
 	}
 
 	// Simple check: does the file start and end with the exact expected blocks?
@@ -125,7 +134,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, bool, error) {
 	}
 
 	if isValid || !fix {
-		return true, isValid, nil
+		return ProcessResult{true, isValid, nil}
 	}
 
 	// Fix logic: remove old markers and inject new ones
@@ -141,7 +150,7 @@ func (e *Engine) ProcessFile(path string, fix bool) (bool, bool, error) {
 	}
 
 	err = os.WriteFile(path, []byte(newContent), 0644)
-	return true, err == nil, err
+	return ProcessResult{true, err == nil, err}
 }
 
 func (e *Engine) executeTemplate(c *config.MarkingConfig, style config.CommentStyle, path string) (string, error) {
